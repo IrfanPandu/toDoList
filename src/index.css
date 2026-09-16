@@ -1161,3 +1161,138 @@ a { color: inherit; }
   .auth-card { padding: 28px 20px; }
   .page-header { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── Notification Badge (Sidebar) ── */
+.nav-badge {
+  margin-left: auto;
+  background: var(--warning);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  line-height: 1;
+}
+.nav-badge.urgent {
+  background: var(--danger);
+}
+
+/* ── Notification Banner ── */
+.notif-banner-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Permission bar */
+.notif-permission-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: #1e40af;
+}
+.notif-permission-bar.denied {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+.notif-permission-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+.notif-permission-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Alert cards */
+.notif-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notif-alert {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid;
+}
+
+.notif-alert.overdue {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+.notif-alert.today {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.notif-alert.tomorrow {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.notif-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.notif-alert-header:hover {
+  filter: brightness(0.97);
+}
+
+.notif-alert-title { flex: 1; }
+
+.notif-alert-list {
+  list-style: none;
+  padding: 0 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  margin-top: 0;
+  padding-top: 8px;
+}
+.notif-alert-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 400;
+}
+.notif-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.notif-date {
+  margin-left: auto;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}

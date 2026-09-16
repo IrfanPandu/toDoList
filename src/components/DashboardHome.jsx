@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
-import { CheckCheck, Clock, Repeat, Target, TrendingUp, AlertCircle } from 'lucide-react'
+import { CheckCheck, Repeat, Target, TrendingUp, AlertCircle } from 'lucide-react'
 import { useTodos } from '../hooks/useTodos'
 import { useTargets } from '../hooks/useTargets'
 import { useAuth } from '../contexts/AuthContext'
 import { isAfter, parseISO, isToday } from 'date-fns'
+import NotificationBanner from './NotificationBanner'
 
 function StatCard({ icon: Icon, value, label, color, bg }) {
   return (
@@ -65,6 +66,9 @@ export default function DashboardHome({ onNavigate }) {
           <p className="page-subtitle">Ringkasan aktivitas kamu hari ini</p>
         </div>
       </div>
+
+      {/* Notification banner */}
+      <NotificationBanner />
 
       {/* Stats */}
       <div className="stats-grid">
