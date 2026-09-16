@@ -1,7 +1,29 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { format } from 'date-fns'
+import { format, getDay } from 'date-fns'
+
+// Check if a recurring todo is active today based on its recur_type and recur_days
+export function isTodoActiveToday(todo) {
+  if (!todo.is_recurring) return true
+  const todayDayIndex = getDay(new Date()) // 0=Sun, 1=Mon, ..., 6=Sat
+
+  switch (todo.recur_type) {
+    case 'daily':
+      return true
+    case 'weekly':
+      // Active only on the day of week it was created (stored as recur_days[0])
+      if (todo.recur_days?.length > 0) return todo.recur_days.includes(todayDayIndex)
+      return true
+    case 'monthly':
+      return true
+    case 'custom':
+      if (!todo.recur_days?.length) return true
+      return todo.recur_days.includes(todayDayIndex)
+    default:
+      return true
+  }
+}
 
 export function useTodos() {
   const { user } = useAuth()
@@ -113,7 +135,11 @@ export function useTodos() {
     if (!todo) return
 
     if (todo.is_recurring) {
-      // For recurring: increment count, mark complete if reached recur_times limit
+      // Block toggle if today is not an active day for custom recurring
+      if (!isTodoActiveToday(todo)) {
+        return { data: null, error: 'Rutinitas ini tidak aktif hari ini.' }
+      }
+
       const today = format(new Date(), 'yyyy-MM-dd')
       const newCount = completed ? todo.recur_count + 1 : Math.max(0, todo.recur_count - 1)
       const isComplete = todo.recur_times ? newCount >= todo.recur_times : completed

@@ -1296,3 +1296,33 @@ a { color: inherit; }
   opacity: 0.7;
   flex-shrink: 0;
 }
+
+/* ── Habit card inactive today ── */
+.habit-card.inactive-today {
+  opacity: 0.6;
+  background: #f8fafc;
+  border-left-color: var(--border);
+}
+
+.habit-card.inactive-today .habit-title {
+  color: var(--text-muted);
+}
+
+.check-icon.inactive {
+  color: var(--text-light);
+}
+
+.habit-check:disabled {
+  cursor: not-allowed;
+}
+
+.habit-inactive-notice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
