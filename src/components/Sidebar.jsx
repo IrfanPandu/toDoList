@@ -8,13 +8,13 @@ const NAV_ITEMS = [
   { id: 'targets', label: 'Target & Reward', icon: Target },
 ]
 
-export default function Sidebar({ activePage, onNavigate }) {
+export default function Sidebar({ activePage, onNavigate, className = '' }) {
   const { signOut, displayName } = useAuth()
   const userName = displayName
   const initials = userName.slice(0, 2).toUpperCase()
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${className}`}>
       <div className="sidebar-logo">
         <CheckSquare size={24} />
         <span>TodoApp</span>
