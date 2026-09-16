@@ -1326,3 +1326,21 @@ a { color: inherit; }
   border-radius: 6px;
   padding: 6px 10px;
 }
+
+/* ── Toggle error inline ── */
+.toggle-error {
+  font-size: 0.78rem;
+  color: var(--danger);
+  background: #fef2f2;
+  border-radius: 4px;
+  padding: 2px 7px;
+  display: inline-block;
+}
+
+/* ── Field warning (due date past, custom days empty) ── */
+.field-warning {
+  font-size: 0.75rem;
+  color: var(--warning);
+  display: block;
+  margin-top: 3px;
+}

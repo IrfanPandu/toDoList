@@ -1,16 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Bell, BellOff, X, AlertTriangle, Clock, Calendar, ChevronDown, ChevronUp } from 'lucide-react'
 import { useNotifications } from '../hooks/useNotifications'
 import { useTodos } from '../hooks/useTodos'
 
+const DISMISSED_KEY = 'todoapp_notif_banner_dismissed'
+
+function getDismissedToday() {
+  try {
+    const raw = localStorage.getItem(DISMISSED_KEY)
+    if (!raw) return false
+    const data = JSON.parse(raw)
+    return data.date === new Date().toDateString() && data.dismissed
+  } catch { return false }
+}
+
+function setDismissedToday() {
+  try {
+    localStorage.setItem(DISMISSED_KEY, JSON.stringify({
+      date: new Date().toDateString(),
+      dismissed: true,
+    }))
+  } catch { /* noop */ }
+}
+
 export default function NotificationBanner() {
   const { todos } = useTodos()
   const { permission, requestPermission, upcomingToday, upcomingTomorrow, overdue } = useNotifications(todos)
-  const [dismissed, setDismissed] = useState(false)
-  const [expanded, setExpanded] = useState(false)
+
+  // Persist dismissed state per hari
+  const [dismissed, setDismissed] = useState(() => getDismissedToday())
+  const [expanded, setExpanded] = useState(null)
   const [requesting, setRequesting] = useState(false)
 
-  const totalAlerts = upcomingToday.length + upcomingTomorrow.length + overdue.length
+  const handleDismiss = () => {
+    setDismissed(true)
+    setDismissedToday()
+  }
 
   const handleRequestPermission = async () => {
     setRequesting(true)
@@ -18,9 +43,10 @@ export default function NotificationBanner() {
     setRequesting(false)
   }
 
-  // Don't show anything if no alerts and permission already granted
-  if (totalAlerts === 0 && permission === 'granted') return null
+  const totalAlerts = upcomingToday.length + upcomingTomorrow.length + overdue.length
+
   if (dismissed && totalAlerts === 0) return null
+  if (totalAlerts === 0 && permission === 'granted') return null
 
   return (
     <div className="notif-banner-wrap">
@@ -40,11 +66,7 @@ export default function NotificationBanner() {
             >
               {requesting ? 'Meminta...' : 'Aktifkan'}
             </button>
-            <button
-              className="btn-icon"
-              onClick={() => setDismissed(true)}
-              aria-label="Tutup"
-            >
+            <button className="btn-icon" onClick={handleDismiss} aria-label="Tutup">
               <X size={14} />
             </button>
           </div>
@@ -55,8 +77,8 @@ export default function NotificationBanner() {
       {permission === 'denied' && !dismissed && (
         <div className="notif-permission-bar denied">
           <BellOff size={15} />
-          <span>Notifikasi browser diblokir. Aktifkan melalui pengaturan browser kamu untuk mendapat pengingat deadline.</span>
-          <button className="btn-icon" onClick={() => setDismissed(true)} aria-label="Tutup">
+          <span>Notifikasi browser diblokir. Aktifkan di pengaturan browser untuk mendapat pengingat.</span>
+          <button className="btn-icon" onClick={handleDismiss} aria-label="Tutup">
             <X size={14} />
           </button>
         </div>
@@ -65,14 +87,11 @@ export default function NotificationBanner() {
       {/* Alert cards */}
       {totalAlerts > 0 && (
         <div className="notif-alerts">
-          {/* Overdue */}
           {overdue.length > 0 && (
             <div className="notif-alert overdue">
               <div className="notif-alert-header" onClick={() => setExpanded(e => e === 'overdue' ? null : 'overdue')}>
                 <AlertTriangle size={15} />
-                <span className="notif-alert-title">
-                  {overdue.length} tugas sudah melewati deadline
-                </span>
+                <span className="notif-alert-title">{overdue.length} tugas sudah melewati deadline</span>
                 {expanded === 'overdue' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </div>
               {expanded === 'overdue' && (
@@ -89,14 +108,11 @@ export default function NotificationBanner() {
             </div>
           )}
 
-          {/* Due today */}
           {upcomingToday.length > 0 && (
             <div className="notif-alert today">
               <div className="notif-alert-header" onClick={() => setExpanded(e => e === 'today' ? null : 'today')}>
                 <Clock size={15} />
-                <span className="notif-alert-title">
-                  {upcomingToday.length} tugas deadline hari ini
-                </span>
+                <span className="notif-alert-title">{upcomingToday.length} tugas deadline hari ini</span>
                 {expanded === 'today' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </div>
               {expanded === 'today' && (
@@ -112,14 +128,11 @@ export default function NotificationBanner() {
             </div>
           )}
 
-          {/* Due tomorrow */}
           {upcomingTomorrow.length > 0 && (
             <div className="notif-alert tomorrow">
               <div className="notif-alert-header" onClick={() => setExpanded(e => e === 'tomorrow' ? null : 'tomorrow')}>
                 <Calendar size={15} />
-                <span className="notif-alert-title">
-                  {upcomingTomorrow.length} tugas deadline besok
-                </span>
+                <span className="notif-alert-title">{upcomingTomorrow.length} tugas deadline besok</span>
                 {expanded === 'tomorrow' ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </div>
               {expanded === 'tomorrow' && (

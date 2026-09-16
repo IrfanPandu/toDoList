@@ -1,4 +1,5 @@
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { TodoProvider } from './contexts/TodoContext'
 import AuthPage from './components/AuthPage'
 import Dashboard from './components/Dashboard'
 
@@ -14,7 +15,14 @@ function AppContent() {
     )
   }
 
-  return user ? <Dashboard /> : <AuthPage />
+  if (!user) return <AuthPage />
+
+  // TodoProvider hanya di-mount saat user sudah login
+  return (
+    <TodoProvider>
+      <Dashboard />
+    </TodoProvider>
+  )
 }
 
 export default function App() {
