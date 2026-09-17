@@ -96,9 +96,8 @@ export function TodoProvider({ children }) {
       const payload = {
         ...todoData,
         user_id: user.id,
-        // Hanya set recur fields untuk recurring todos
-        recur_count: todoData.is_recurring ? 0 : undefined,
-        last_reset_date: todoData.is_recurring ? today : undefined,
+        recur_count: 0,          // selalu 0, NOT NULL di DB
+        last_reset_date: today,  // selalu diisi agar reset logic konsisten
       }
       const { data, error } = await supabase
         .from('todos').insert([payload]).select().single()
